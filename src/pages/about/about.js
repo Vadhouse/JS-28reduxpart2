@@ -1,4 +1,11 @@
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import {
+  increment,
+  decrement,
+  incrementByAmount,
+} from '../../redux/counter/counterSlice';
+import { counterSelector } from '../../redux/counter/counterSelector';
 
 const styles = {
   wrapper: {
@@ -42,10 +49,28 @@ const styles = {
 };
 
 const About = () => {
+  const dispsch = useDispatch();
+  const counterValue = useSelector(counterSelector);
+
+  const handleIncrement = () => {
+    dispsch(increment());
+  };
+  const handleDecrement = () => {
+    dispsch(decrement());
+  };
+  const handleIncrementByAmount = (amount) => {
+    dispsch(incrementByAmount(amount));
+  };
   return (
     <div style={styles.wrapper}>
       <div style={styles.card}>
         <h1 style={styles.title}>Про застосунок</h1>
+        <p>{counterValue}</p>
+        <button onClick={handleIncrement}>Increment</button>
+        <button onClick={handleDecrement}>Decrement</button>
+        <button onClick={() => handleIncrementByAmount(5)}>
+          Increment By Amount
+        </button>
         <p style={styles.paragraph}>
           React Router — це бібліотека, яка дозволяє створювати маршрути в
           односторінкових додатках (SPA). Вона синхронізує URL-адресу з

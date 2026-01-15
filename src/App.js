@@ -9,10 +9,12 @@ import { useQuery } from '@tanstack/react-query';
 // import NotFoundPage from './pages/not-found/not-found';
 // import ErrorPage from './pages/error-page/error-page';
 import { getAllUsers } from './api/api';
-import { lazy, Suspense, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import PrivateRoutes from './components/PrivateRoutes/PrivateRoutes';
 // import Loader from './components/Loader/Loader';
 import { AuthContext } from './context/AuthContext';
+import { useDispatch } from 'react-redux';
+import { fetchUsers } from './redux/users/userSlice';
 
 const Home = lazy(() => import('./pages/home/home'));
 const Todo = lazy(() => import('./pages/todo-list/Todo'));
@@ -35,6 +37,7 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(
     !!localStorage.getItem('username') && !!localStorage.getItem('email')
   );
+  const dispsch = useDispatch();
 
   const { data: userList, isFetching } = useQuery({
     queryKey: ['userList'],
@@ -42,6 +45,10 @@ function App() {
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
   });
+
+  useEffect(() => {
+    dispsch(fetchUsers());
+  }, [dispsch]);
 
   return (
     <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated }}>
